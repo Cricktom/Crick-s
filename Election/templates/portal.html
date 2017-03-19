@@ -114,7 +114,7 @@ label:before {
 		</li>
 
 		{% if desig == "voter" %}
-			{% if delete == "yes" %}
+			{% if delete == "yes" or polling == "yes" %}
 				<li class="menu">
 	          <ul>
 			    <li class="button"><a href="#">Candidates<span class="icon stat"> </span></a></li>
