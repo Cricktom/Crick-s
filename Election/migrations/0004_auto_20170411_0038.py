@@ -7,15 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Election', '0001_initial'),
+        ('Election', '0003_voters'),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='post',
-            name='author',
-        ),
-        migrations.DeleteModel(
-            name='Post',
+        migrations.AlterField(
+            model_name='voters',
+            name='user_id',
+            field=models.TextField(serialize=False, primary_key=True),
         ),
     ]
