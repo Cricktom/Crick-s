@@ -154,4 +154,95 @@ $(document).ready(function() {
                                     }
                                 );
                               });
+    $("#register").click(function(){
+
+    if($("#desig").val()=="" || $("#roll-no").val()=="Roll no" || $("#agenda").val()=="")
+    {
+    swal("fill all input section","Select a designation", "error");
+    return;
+    }
+    data = new FormData()
+    data.append("post",$("#desig").val());
+    data.append("user",$("#roll-no").val());
+    data.append("agenda",$("#agenda").val());
+    console.log($("#desig").val());
+    console.log($("#roll-no").val());
+    console.log($("#agenda").val());
+
+
+    swal({
+          title: "Are you sure?",
+          text: "You will not be able to revert your action!",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: '#DD6B55',
+          confirmButtonText: 'confirm',
+          cancelButtonText: "No, cancel plzz!",
+          closeOnConfirm: false,
+          closeOnCancel: true
+        },
+        function(isConfirm){
+            if (isConfirm){
+              $.ajax({
+                        url: '/enroll',
+                        data: data,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        type: 'POST',
+                        success: function(data){
+                          dataset = JSON.parse(data);
+                          if(dataset.success){
+                            sweetAlert({
+                              title: "Successfully enrolled",
+                              text: "Candidature has been added!",
+                              type: "success"
+                                  },
+
+                                  function () {
+                                      window.location.href = 'portal';
+                                  });// window.location.href = "/portal";
+                          }
+                          else if(dataset.able){
+                            sweetAlert({
+                                      title: "Already enrolled for some designation",
+                                      text: "Can't enroll!",
+                                      type: "error"
+                                  },
+
+                                  function () {
+                                    window.location.href = 'portal';
+                                  });
+                          }
+                          else if(dataset.athourized){
+                            sweetAlert({
+                                      title: "Unidentified roll",
+                                      text: "Can't enroll!",
+                                      type: "error"
+                                  },
+
+                                  function () {
+                                    window.location.href = 'portal';
+                                  });
+                          }
+
+                        },
+                        error: function(errors) {
+
+                          sweetAlert({
+                                    title: "Unexpected error occured ",
+                                    text: "please try after sometime!",
+                                    type: "error"
+                                },
+
+                                function () {
+                                    window.location.href = 'portal';
+                                });
+                        }
+                    });
+
+              }
+            }
+        );
+      });
 });

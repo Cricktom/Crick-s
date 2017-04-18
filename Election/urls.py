@@ -13,7 +13,8 @@ urlpatterns = [
     url(r'^confirmation$', views.confirm_vote, name='vote-confirmation_form'),
     url(r'^results$', views.result_render, name='vote-casting-form'),
     url(r'^delete/candidates$', views.delete_render, name='vote-casting-form'),
-    url(r'^discard$', views.confirm_discard, name='vote-casting-form'),
+    url(r'^discard$', views.confirm_discard, name='discard-form'),
+    url(r'^enroll$', views.enroll_candidate, name='enroll-form'),
     url(r'', views.render_page, name='home'),
 
     # url(r'^$', 'Election_portal.views.home', name='home'),

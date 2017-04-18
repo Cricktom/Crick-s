@@ -318,3 +318,47 @@ def confirm_discard(request):
           return HttpResponse(json.dumps({"success":True}));
       except:
           return HttpResponse(json.dumps({"success":False}));
+
+@csrf_exempt
+def enroll_candidate(request):
+    selected_ids = [str(itm) for itm in json.loads(request.POST.get('user_id'))] if request.POST.get('user_id') else [];
+    try:
+      username = request.session['username']
+      passwd = request.session['password']
+      desig = request.session['desig']
+    except:
+        pass
+    query = 'select * from Election_login_data where email ="'+str(username)+'" and password ="'+str(passwd)+'";'
+    from django.db import connection
+    with connection.cursor() as cursor:
+      cursor.execute(query)
+      all_data = cursor.fetchall()
+      # print all_data
+      if not all_data:
+          return render_to_response('Login_page.html',context_instance=RequestContext(request))
+      col_name_list = [desc[0] for desc in cursor.description]
+      user_data=map(lambda z:dict(izip(col_name_list,z)),map(lambda x:map(lambda y:smart_str(y),list(x)), all_data))
+      year = datetime.date.today().year
+      roll = request.POST.get("user")
+      post = request.POST.get("post")
+      agenda = request.POST.get("agenda")
+      query = 'select * from Election_candidates where user_name = "'+str(roll)+'" and year(candidature_date)="'+str(year)+'"'
+      with connection.cursor() as cursor:
+        cursor.execute(query)
+        casted_data = cursor.fetchall();
+      if casted_data:
+        return  HttpResponse(json.dumps({"success":False,"able":True}));
+      query = 'select * from Election_citizens where user_name = "'+str(roll)+'";'
+      print query
+      with connection.cursor() as cursor:
+        cursor.execute(query)
+        citizen_data = cursor.fetchall();
+      if not citizen_data:
+        return  HttpResponse(json.dumps({"success":False,"athourized":True}));
+      query = 'insert into Election_candidates values("'+str(roll)+'",0,"'+str(datetime.date.today().strftime("%Y-%m-%d"))+'","'+str(agenda)+'","'+str(post)+'");'
+      try:
+          with connection.cursor() as cursor:
+              cursor.execute(query)
+          return HttpResponse(json.dumps({"success":True}));
+      except:
+          return HttpResponse(json.dumps({"success":False}));
