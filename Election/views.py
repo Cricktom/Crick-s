@@ -16,6 +16,9 @@ def render_page(request):
 @csrf_exempt
 # @require_POST
 # @login_required
+#
+#
+# 
 def portal_render(request):
   username = request.POST.get('mail', '')
   passwd = request.POST.get('Password', '')
